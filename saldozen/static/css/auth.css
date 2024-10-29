@@ -1,0 +1,55 @@
+@import 'app.css';
+
+.login-container {
+    background-color: #A4D3E2; /* Cor mais clara para o container, harmonizando com o gradiente */
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 2rem; /* Espaçamento interno */
+    width: 100%;
+    max-width: 400px;
+}
+
+h2 {
+    color: #024059; /* Cor do título, combinando com o fundo */
+    text-align: center; /* Centraliza o texto */
+    margin-bottom: 1.5rem; /* Espaçamento inferior */
+}
+
+.btn-custom {
+    background-color: #0f3460; /* Cor do botão */
+    border: none; /* Sem borda */
+    color: #ffffff; /* Cor do texto do botão */
+}
+
+.btn-custom:hover {
+    background-color: #16213e; /* Cor ao passar o mouse */
+}
+
+.form-control {
+    background-color: #ffffff; /* Cor de fundo dos campos, criando contraste */
+    border: 1px solid #ddd; /* Borda cinza */
+    border-radius: 5px; /* Bordas arredondadas */
+    color: #333; /* Cor do texto */
+}
+
+.form-control:focus {
+    background-color: #f0f8ff; /* Azul muito claro ao focar, complementando o gradiente */
+    border-color: #0f3460; /* Borda azul */
+    box-shadow: 0 0 0 0.25rem rgba(15, 52, 96, 0.25); /* Sombra */
+    color: #333; /* Mantém o texto escuro para legibilidade */
+}
+
+.text-light:hover {
+    text-decoration: underline; /* Sublinhado ao passar o mouse */
+}
+
+/* Estilo dos rótulos do formulário */
+label {
+    color: #024059; /* Cor dos rótulos, combinando com o tema geral */
+    margin-bottom: 0.5rem; /* Espaçamento inferior */
+    display: block; /* Garante que o rótulo fique em uma nova linha */
+}
+
+.btn-link {
+    color: #024059;
+}
