@@ -1,8 +1,8 @@
-from saldozen import app, db  
+from saldozen import app, db
 
 
 with app.app_context():
     db.create_all()
-#checks if the run.py file has executed directly and not imported
-if __name__ == '__main__':
+# checks if the run.py file has executed directly and not imported
+if __name__ == "__main__":
     app.run(debug=True)
