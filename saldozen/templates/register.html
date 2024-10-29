@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}
+Register
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container-fluid vh-100 d-flex justify-content-center align-items-center">
+    <div class="row w-100 justify-content-center">
+        <div class="col-11 col-sm-8 col-md-6 col-lg-5 col-xl-4 d-flex align-items-center justify-content-center">
+        <!-- <div class="col-11 col-sm-8 col-md-6 col-lg-5 col-xl-4"> -->
+            <div class="login-container p-4 p-md-5">
+                <h2 class="text-center mb-3">
+                    <span class="fw-bold">Economize</span>
+                </h2>
+                <p class="text-center mb-4">Crie sua conta agora</p>
+                <form method="POST" class="form-register">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.username.label(class="form-label") }}
+                        {{ form.username(class="form-control", placeholder="Nome") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.email_address.label(class="form-label") }}
+                        {{ form.email_address(class="form-control", placeholder="Email") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.password1.label(class="form-label") }}
+                        {{ form.password1(class="form-control", placeholder="Senha") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.password2.label(class="form-label") }}
+                        {{ form.password2(class="form-control", placeholder="Confirme a senha") }}
+                    </div>
+                    <div class="text-center">
+                        {{ form.submit(class="btn btn-custom w-100") }}
+                    </div>
+                    <div class="text-center mt-3">
+                        <span class="fw-bolder">Já tem uma conta?</span>
+                        <a href="{{ url_for('login_page') }}" class="fw-bolder btn-link ms-2">Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

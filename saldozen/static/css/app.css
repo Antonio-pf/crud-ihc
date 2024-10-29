@@ -1,0 +1,105 @@
+:root {
+    --primary-bg: #024059;
+    --secondary-bg: #025E73;
+    --accent-color: #F2AB6D;
+    --highlight-color: #D9896C;
+    --neutral-color: #8C5346;
+    --text-primary: rgba(255, 255, 255, 0.87); /* Ajuste de cor para textos */
+    --success-color: #11831b;
+}
+
+/* Classes de fundo */
+.bg-primary {
+    background-color: var(--primary-bg);
+    color: var(--text-primary);
+}
+
+.bg-secondary {
+    background-color: var(--secondary-bg);
+    color: var(--text-primary);
+}
+
+.bg-accent {
+    background-color: var(--accent-color);
+    color: var(--primary-bg); /* Ajuste para contraste */
+}
+
+.bg-highlight {
+    background-color: var(--highlight-color);
+    color: var(--text-primary);
+}
+
+.bg-neutral {
+    background-color: var(--neutral-color);
+    color: var(--text-primary);
+}
+
+/* Classes de borda */
+.border-primary {
+    border: 2px solid var(--primary-bg);
+}
+
+.border-secondary {
+    border: 2px solid var(--secondary-bg);
+}
+
+.border-accent {
+    border: 2px solid var(--accent-color);
+}
+
+.border-highlight {
+    border: 2px solid var(--highlight-color);
+}
+
+.border-neutral {
+    border: 2px solid var(--neutral-color);
+}
+
+/* Classes de texto */
+.text-primary {
+    color: var(--primary-bg);
+}
+
+.text-secondary {
+    color: var(--secondary-bg);
+}
+
+.text-accent {
+    color: var(--accent-color);
+}
+
+.text-highlight {
+    color: var(--highlight-color);
+}
+
+.text-neutral {
+    color: var(--neutral-color);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    background: linear-gradient(to bottom, #024059, #A4D3E2);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+
+@media (max-height: 500px) {
+    .container-fluid {
+        align-items: flex-start !important;
+        padding-top: 1rem;
+    }
+}
+
