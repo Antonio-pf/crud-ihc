@@ -2,8 +2,8 @@
 
 .custom-alert {
     position: fixed;
-    top: 20px;
-    left: 50%;
+    top: 65px;
+    left: 85%;
     transform: translateX(-50%);
     width: 90%;
     max-width: 400px;
@@ -96,6 +96,10 @@
 
 @media (max-width: 600px) {
     .custom-alert {
-        width: 95%;
+        top: 65px;
+        left: 50%; 
+        transform: translateX(-50%); 
+        right: auto; 
+        width: 95%; 
     }
 }
