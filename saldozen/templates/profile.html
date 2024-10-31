@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+Editar Perfil
+{% endblock %}
+
+{% block content %}
+<div class="edit-profile-container">
+  <div class="card-custom border-0 shadow-lg bg-secondary ">
+    <div class="card-header bg-transparent border-bottom-0 text-center pt-4">
+      <h2 class="mb-0 text-accent">Editar Perfil</h2>
+    </div>
+    <div class="card-body p-4">
+      <form method="POST" action="{{ url_for('edit_profile_page') }}">
+        {{ form.hidden_tag() }}
+        <div class="mb-4 floating-label">
+          {{ form.username(class='form-control bg-transparent border-0 border-bottom rounded-0 text-white', placeholder=' ', value=current_user.username) }}
+          {{ form.username.label(class='form-label text-accent') }}
+        </div>  
+        <div class="mb-4 floating-label">
+          {{ form.password1(class='form-control bg-transparent border-0 border-bottom rounded-0 text-white', placeholder=' ') }}
+          {{ form.password1.label(class='form-label text-accent') }}
+        </div>
+        <div class="mb-4 floating-label">
+          {{ form.password2(class='form-control bg-transparent border-0 border-bottom rounded-0 text-white', placeholder=' ') }}
+          {{ form.password2.label(class='form-label text-accent') }}
+        </div>
+        <div class="text-center mt-5">
+          {{ form.submit(class='btn btn-lg bg-accent text-primary-bg hover-highlight') }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

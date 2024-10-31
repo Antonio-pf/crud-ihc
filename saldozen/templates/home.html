@@ -1,9 +1,90 @@
 {% extends 'base.html' %}
 
-{% block title %} 
-Home 
-{% endblock %} 
+{% block title %}
+Home - Personal Expenses
+{% endblock %}
 
-{% block content%} 
-This is the first content with flask
- {% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center text-white mb-4">Despesas Pessoais</h1>
+    <div class="row">
+        <!-- Total Expenses Card -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card bg-secondary text-white h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-accent">Despesas totais</h5>
+                    <p class="card-text display-4">$1,234.56</p>
+                    <p class="card-text text-highlight">
+                        <i class="fas fa-arrow-up"></i> 5% do mês passado
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biggest Expense Category Card -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card bg-secondary text-white h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-accent">Maior despesa</h5>
+                    <p class="card-text display-4">Aluguel</p>
+                    <p class="card-text text-highlight">$600.00 (48.6%)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget Status Card -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card bg-secondary text-white h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-accent">Orçamento</h5>
+                    <p class="card-text display-4">75%</p>
+                    <p class="card-text text-highlight">$265.44 restante</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transaction Card -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card bg-secondary text-white h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-accent">Mais recente</h5>
+                    <p class="card-text">Mercado</p>
+                    <p class="card-text display-4">$78.35</p>
+                    <p class="card-text text-highlight">
+                        <i class="fas fa-clock"></i> 2 dias atrás
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .card-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+    .display-4 {
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+    .text-accent {
+        color: var(--accent-color);
+    }
+    .text-highlight {
+        color: var(--highlight-color);
+    }
+    .bg-secondary {
+        background-color: var(--secondary-bg);
+    }
+</style>
+{% endblock %}

@@ -76,13 +76,37 @@
                 </a>
               </li>
 
-              <li class="nav-item">
-                <a class="nav-link">Welcome, {{ current_user.username }}</a>
-              </li>
-
-              <li class="nav-item">
-                <a href="{{ url_for('logout_page') }}" class="nav-link">Logout</a>
-              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="userDropdown" role="button" aria-expanded="false">
+                    Bem-vindo, {{ current_user.username }}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                    <li class="text-center">
+                        <p class="m-0"> 
+                            {{ current_user.username }}
+                        </p>
+                    </li>
+                    <hr class="custom-hr mt-2 ">
+                    <li class="d-flex align-items-center justify-content-center">
+                        <a class="dropdown-item d-flex align-items-center" href="{{ url_for('edit_profile_page') }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle me-2" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                            </svg>
+                            Editar Perfil
+                        </a>
+                    </li>
+                    <li class="d-flex align-items-center justify-content-center">
+                        <a class="dropdown-item d-flex align-items-center" href="{{ url_for('logout_page') }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle me-2" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
+                            </svg>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            
             </ul>
           </div>
           {% else %}
@@ -95,6 +119,7 @@
           </div>  
         {% endif %}
 
+        
         </div>
         
       </nav>

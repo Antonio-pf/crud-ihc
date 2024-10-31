@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
 from saldozen.models import User
+from flask_login import current_user
 
 
 class RegisterForm(FlaskForm):
@@ -10,7 +11,7 @@ class RegisterForm(FlaskForm):
         user = User.query.filter_by(username=username_to_check.data).first()
         if user:
             raise ValidationError(
-                "Username already exists! Please try a different username"
+                "Username já existe! Por favor tente um diferente"
             )
 
     def validate_email_address(self, email_address_to_check):
@@ -20,7 +21,7 @@ class RegisterForm(FlaskForm):
         ).first()
         print(email_adress)
         if email_adress:
-            raise ValidationError("Email address already exists! Try a different email")
+            raise ValidationError("Email já existe! Tente um diferente")
 
     username = StringField(
         label="Nome:", validators=[Length(min=2, max=30), DataRequired()]
@@ -41,3 +42,22 @@ class LoginForm(FlaskForm):
     username = StringField(label="Usuário:", validators=[DataRequired()])
     password = PasswordField(label="Senha: ", validators=[DataRequired()])
     submit = SubmitField(label="Entrar")
+
+class EditProfileForm(FlaskForm):
+    def validate_username(self, username_to_check):
+        user = User.query.filter_by(username=username_to_check.data).first()
+        if user and user.id != current_user.id:
+            raise ValidationError("Esse nome de usuário já existe! Tente um nome diferente.")
+
+    username = StringField(
+        label="Nome de Usuário:", validators=[Length(min=2, max=30), DataRequired()]
+    )
+    password1 = PasswordField(
+        label="Nova Senha:", 
+        validators=[Length(min=6, message='A senha deve ter pelo menos 6 caracteres')]
+    )
+    password2 = PasswordField(
+        label="Confirme Nova Senha:", 
+        validators=[EqualTo("password1", message='As senhas não coincidem')]
+    )
+    submit = SubmitField(label="Salvar Alterações")

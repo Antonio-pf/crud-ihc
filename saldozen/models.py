@@ -34,3 +34,38 @@ class User(db.Model, UserMixin):
 
     def check_password_correction(self, attempted_password):
         return bcrypt.check_password_hash(self.password_hash, attempted_password)
+    
+    def add_expense(self, expense_type_id, amount, date=None, description=None):
+        from datetime import datetime
+        if date is None:
+            date = datetime.now()  
+
+        new_expense = Expense(user_id=self.id, expense_type_id=expense_type_id,
+                              amount=amount, date=date, description=description)
+        db.session.add(new_expense)
+        db.session.commit()
+
+    
+class ExpenseType(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(length=30), nullable=False, unique=True)
+
+    # Define o relacionamento
+    expenses = db.relationship('Expense', backref='expense_type', lazy=True)
+
+    def __repr__(self):
+        return f'<ExpenseType {self.name}>'
+    
+class Expense(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
+    expense_type_id = db.Column(db.Integer(), db.ForeignKey('expense_type.id'), nullable=False)
+    amount = db.Column(db.Integer(), nullable=False)  # Valor da despesa
+    date = db.Column(db.DateTime(), nullable=False)  # Data da despesa
+    description = db.Column(db.String(length=200), nullable=True)  # Descrição da despesa
+
+    # Relacionamento com User
+    user = db.relationship('User', backref='expenses', lazy=True)
+    
+    def __repr__(self):
+        return f'<Expense {self.amount} on {self.date}>'

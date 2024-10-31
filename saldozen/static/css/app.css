@@ -1,12 +1,12 @@
-:root {
-    --primary-bg: #024059;
-    --secondary-bg: #025E73;
-    --accent-color: #F2AB6D;
-    --highlight-color: #D9896C;
-    --neutral-color: #8C5346;
-    --text-primary: rgba(255, 255, 255, 0.87); /* Ajuste de cor para textos */
-    --success-color: #11831b;
-}
+    :root {
+        --primary-bg: #024059;
+        --secondary-bg: #025E73;
+        --accent-color: #F2AB6D;
+        --highlight-color: #D9896C;
+        --neutral-color: #8C5346;
+        --text-primary: rgba(255, 255, 255, 0.87); /* Ajuste de cor para textos */
+        --success-color: #11831b;
+    }
 
 /* Classes de fundo */
 .bg-primary {
@@ -75,6 +75,87 @@
 .text-neutral {
     color: var(--neutral-color);
 }
+.nav-item.dropdown .dropdown-menu {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+}
+
+.nav-item.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #c2eef8; 
+    color: var(--primary-bg);
+}
+.custom-hr {
+    border: none;
+    border-top: 1px solid var(--primary-bg);
+    width: 90%; 
+    margin: auto; 
+}
+
+.edit-profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 56px); 
+    padding: 2rem 1rem;
+  }
+  
+  .card-custom {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 6px;
+  }
+
+  .floating-label {
+    position: relative;
+    margin-bottom: 1em;
+  }
+  .floating-label input {
+    height: 3.125rem;
+    padding-top: 1.25rem;
+  }
+  .floating-label label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding: 1rem .75rem;
+    pointer-events: none;
+    border: 1px solid transparent;
+    transform-origin: 0 0;
+    transition: opacity .15s ease-in-out, transform .15s ease-in-out;
+  }
+  .floating-label input:focus ~ label,
+  .floating-label input:not(:placeholder-shown) ~ label {
+    opacity: .65;
+    transform: scale(.85) translateY(-0.5rem) translateX(0.15rem);
+  }
+  .form-control:focus {
+    box-shadow: none;
+    border-color: var(--accent-color) !important;
+  }
+  .btn.hover-highlight:hover {
+    background-color: var(--highlight-color) !important;
+  }
+
+  @media (max-height: 600px) {
+    .edit-profile-container {
+      align-items: flex-start;
+    }
+  }
 
 html, body {
     margin: 0;
@@ -102,4 +183,5 @@ body {
         padding-top: 1rem;
     }
 }
+
 
