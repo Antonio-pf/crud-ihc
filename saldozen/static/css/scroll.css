@@ -1,0 +1,19 @@
+/* Estilo para a barra de rolagem */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: linear-gradient(to bottom, #024059, #A4D3E2); 
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color); 
+    border-radius: 10px;
+    border: 3px solid #024059;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--highlight-color);
+}
