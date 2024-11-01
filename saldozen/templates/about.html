@@ -1,9 +1,153 @@
 {% extends 'base.html' %}
 
 {% block title %} 
-    Sobre 
+    Sobre - SaldoZen
 {% endblock %} 
 
-{% block content%} 
-Content abou meeeee
+{% block content %} 
+<div class="container mt-5">
+    <h1 class="text-center section-title mb-2 animate__animated animate__fadeIn">Sobre o Projeto SaldoZen</h1>
+    <p class="text-center mb-5 animate__animated animate__fadeIn animate__delay-1s">Encontre o equilíbrio financeiro que você merece</p>
+  
+    <div class="about-section text-center animate__animated animate__fadeInUp">
+      <h2 class="section-title">Nosso Propósito</h2>
+      <p>SaldoZen é uma plataforma desenvolvida para promover o equilíbrio financeiro pessoal. Inspirado pela ideia de "Zen", nosso objetivo é ajudar os usuários a alcançar uma visão clara e organizada de suas finanças, permitindo um controle consciente e equilibrado dos gastos e receitas.</p>
+      <p>Com SaldoZen, acreditamos que todos podem obter estabilidade financeira com simplicidade e praticidade.</p>
+    </div>
+
+    <div class="about-section text-center animate__animated animate__fadeInUp animate__delay-1s">
+      <h2 class="section-title">Funcionalidades Principais</h2>
+      <ul class="list-unstyled feature-list">
+        <li class="feature-item">
+          <span class="feature-icon">🔒</span>
+          <strong>Login e Cadastro:</strong> Sistema de autenticação seguro para proteção dos seus dados.
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon">💸</span>
+          <strong>Gerenciamento de Despesas:</strong> Cadastre e organize suas despesas de forma prática.
+        </li>
+        <li class="feature-item">
+          <span class="feature-icon">📊</span>
+          <strong>Dashboard Intuitivo:</strong> Visualize um resumo claro da sua situação financeira atual.
+        </li>
+      </ul>
+    </div>
+  
+    <div class="about-section text-center animate__animated animate__fadeInUp animate__delay-2s">
+      <h2 class="section-title">Objetivo</h2>
+      <p>Proporcionar uma ferramenta acessível para que os usuários acompanhem suas finanças de forma eficiente, criando hábitos de equilíbrio financeiro no dia a dia.</p>
+    </div>
+  
+    <div class="text-center animate__animated animate__fadeInUp animate__delay-3s mb-5">
+      <h2 class="section-title">Desenvolvedores</h2>
+      <div class="card developer-card mx-auto" style="max-width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">Antônio Pires Felipe</h5>
+          <p class="card-text">Código de Matrícula: 2840482211003</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ <style>
+    :root {
+      --primary-bg: #024059;
+      --secondary-bg: #025E73;
+      --accent-color: #F2AB6D;
+      --highlight-color: #D9896C;
+      --neutral-color: #8C5346;
+      --text-primary: rgba(255, 255, 255, 0.87);
+      --success-color: #11831b;
+    }
+
+    body {
+      background-color: var(--primary-bg);
+      color: var(--text-primary);
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .container {
+      max-width: 800px;
+    }
+
+    .section-title {
+      color: var(--accent-color);
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-section {
+      background-color: var(--secondary-bg);
+      padding: 3rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .about-section:hover {
+      transform: translateY(-5px);
+    }
+
+    .developer-card {
+      background-color: var(--highlight-color);
+      border: none;
+      color: var(--text-primary);
+      border-radius: 8px;
+      margin-top: 1rem;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .developer-card:hover {
+      transform: scale(1.05);
+    }
+
+    .developer-card h5 {
+      font-size: 1.2rem;
+      color: var(--neutral-color);
+    }
+
+    .btn-primary {
+      background-color: var(--accent-color);
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--neutral-color);
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .feature-item:hover {
+      transform: translateX(10px);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .about-section {
+        padding: 2rem;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
  {% endblock %}

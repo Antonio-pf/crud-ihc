@@ -1,58 +1,102 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Home - Personal Expenses
+Home - Despesas pessoais
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container-fluid py-4 custom-container">
     <h1 class="text-center text-white mb-4">Despesas Pessoais</h1>
-    <div class="row">
-        <!-- Total Expenses Card -->
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card bg-secondary text-white h-100">
+    <div class="row g-4">
+        <!-- Total Card -->
+        <div class="col-12">
+            <div class="card bg-primary text-white">
                 <div class="card-body">
-                    <h5 class="card-title text-accent">Despesas totais</h5>
-                    <p class="card-text display-4">$1,234.56</p>
-                    <p class="card-text text-highlight">
-                        <i class="fas fa-arrow-up"></i> 5% do mês passado
-                    </p>
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h2 class="card-title h4 mb-3 text-start">Total</h2>
+                            <div class="d-flex align-items-baseline">
+                                <p class="display-4 mb-0 me-3">{{ current_user.prettier_budget }}</p>
+                                <span class="text-success fs-5">
+                                    <i class="bi bi-arrow-up-right-circle me-1"></i>{{ percentage_used | round(2) }}%
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-3 mt-md-0">
+                            <div class="d-flex justify-content-md-end gap-3">
+                                <a href="#" class="btn btn-light d-flex flex-column align-items-center">
+                                    <i class="bi bi-piggy-bank-fill fs-2 mb-1"></i>
+                                    <span>Entrada</span>
+                                </a>
+                                <a href="#" class="btn btn-light d-flex flex-column align-items-center">
+                                    <i class="bi bi-receipt fs-2 mb-1"></i>
+                                    <span>Despesas</span>
+                                </a>
+                                <a href="#" class="btn btn-light d-flex flex-column align-items-center">
+                                    <i class="bi bi-file-earmark-arrow-down-fill fs-2 mb-1"></i>
+                                    <span>Exportar</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Biggest Expense Category Card -->
-        <div class="col-md-6 col-lg-3 mb-4">
+        <div class="col-md-6 col-lg-3">
             <div class="card bg-secondary text-white h-100">
                 <div class="card-body">
-                    <h5 class="card-title text-accent">Maior despesa</h5>
-                    <p class="card-text display-4">Aluguel</p>
-                    <p class="card-text text-highlight">$600.00 (48.6%)</p>
+                    
+                    <h3 class="card-title h5 mb-3">Despesas totais</h3>
+                    {% if most_recent_expense %}
+                        <p class="display-5 mb-2">{{ total_expenses }}</p>
+                        <p class="mb-0 text-success">
+                            <i class="bi bi-arrow-up me-1"></i>5% do mês passado
+                        </p>
+                    {% else %}
+                        <p>Você ainda não registrou nenhuma despesa.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
 
-        <!-- Budget Status Card -->
-        <div class="col-md-6 col-lg-3 mb-4">
+        <div class="col-md-6 col-lg-3">
             <div class="card bg-secondary text-white h-100">
                 <div class="card-body">
-                    <h5 class="card-title text-accent">Orçamento</h5>
-                    <p class="card-text display-4">75%</p>
-                    <p class="card-text text-highlight">$265.44 restante</p>
+                    <h3 class="card-title h5 mb-3">Maior despesa</h3>
+                    {% if largest_expense %}
+                    <p class="display-5 mb-2">{{ largest_expense.expense_type.name }}</p>
+                        <p class="mb-0 text-warning">{{ largest_expense.prettier_amount }} - {{ ((largest_expense.amount * 100) / total_expenses) | float | round(2) }}% do total de despesas.</p>
+                    {% else %}
+                        <p>Você ainda não registrou nenhuma despesa.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
 
-        <!-- Recent Transaction Card -->
-        <div class="col-md-6 col-lg-3 mb-4">
+        <div class="col-md-6 col-lg-3">
             <div class="card bg-secondary text-white h-100">
                 <div class="card-body">
-                    <h5 class="card-title text-accent">Mais recente</h5>
-                    <p class="card-text">Mercado</p>
-                    <p class="card-text display-4">$78.35</p>
-                    <p class="card-text text-highlight">
-                        <i class="fas fa-clock"></i> 2 dias atrás
-                    </p>
+                    <h3 class="card-title h5 mb-3">Orçamento</h3>
+                    <p class="display-5 mb-2">75%</p>
+                    <p class="mb-0 text-info">$265.44 restante</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Most Recent Expense Card -->
+        <div class="col-md-6 col-lg-3">
+            <div class="card bg-secondary text-white h-100">
+                <div class="card-body">
+                    <h3 class="card-title h5 mb-3">Mais recente</h3>
+                    {% if most_recent_expense %}
+                    <p class="mb-1">{{ most_recent_expense.expense_type.name }}</p>
+                    <p class="display-5 mb-2">{{ most_recent_expense.prettier_amount }}</p>
+                    <p class="mb-0 text-muted">
+                        <i class="bi bi-clock me-1"></i>{{ most_recent_expense.date | days_ago }} dias atrás
+                    {% else %}
+                    <p>Você ainda não registrou nenhuma despesa.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -60,31 +104,56 @@ Home - Personal Expenses
 </div>
 
 <style>
+    body {
+        background-color: #f8f9fa;
+    }
     .card {
         border: none;
-        border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
         transition: transform 0.3s ease-in-out;
     }
     .card:hover {
         transform: translateY(-5px);
     }
-    .card-title {
-        font-size: 1.1rem;
-        font-weight: bold;
-    }
-    .display-4 {
-        font-size: 2.5rem;
-        font-weight: bold;
-    }
-    .text-accent {
-        color: var(--accent-color);
-    }
-    .text-highlight {
-        color: var(--highlight-color);
+    .bg-primary {
+        background-color: #027A88 !important;
     }
     .bg-secondary {
-        background-color: var(--secondary-bg);
+        background-color: #025864 !important;
     }
+    .text-success {
+        color: #28a745 !important;
+    }
+    .text-warning {
+        color: #ffc107 !important;
+    }
+    .text-info {
+        color: #17a2b8 !important;
+    }
+    .btn-light {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: transparent;
+        color: #fff;
+        transition: background-color 0.3s ease;
+    }
+    .btn-light:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #fff;
+    }
+
+    .custom-container {
+        width: 100%;
+        max-width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    @media (min-width: 768px) {
+        .custom-container {
+            width: 75%;
+        }
+    }
+    
 </style>
 {% endblock %}

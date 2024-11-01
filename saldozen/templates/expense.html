@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+
+{% block title %} 
+    Despesas - SaldoZen
+{% endblock %} 
+
+{% block content %}
+<div class="container-fluid py-4 custom-container w-75">
+    <h1 class="text-center text-white mb-4">Gerenciar Despesas</h1>
+    
+    <div class="row g-4">
+        <!-- Adicionar Despesa Card -->
+        <div class="col-md-6">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h2 class="card-title h4 mb-3">Adicionar Despesa</h2>
+                    <form method="POST" class="expense-form">
+                        <div class="mb-3">
+                            <label for="expense_type_id" class="form-label">Categoria</label>
+                            <div class="select-wrapper">
+                                <select name="expense_type_id" id="expense_type_id" class="form-select" required>
+                                    <option value="">Selecione a Categoria</option>
+                                    {% for expense_type in expense_types %}
+                                        <option value="{{ expense_type.id }}">{{ expense_type.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Valor</label>
+                            <input type="number" name="amount" id="amount" class="form-control" placeholder="Valor" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descrição</label>
+                            <input type="text" name="description" id="description" class="form-control" placeholder="Descrição">
+                        </div>
+                        <button type="submit" class="btn btn-light w-100">Adicionar Despesa</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Despesas Registradas Card -->
+        <div class="col-md-6">
+            <div class="card bg-secondary text-white">
+                <div class="card-body">
+                    <h2 class="card-title h4 mb-3">Despesas Registradas</h2>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Categoria</th>
+                                    <th>Valor</th>
+                                    <th>Descrição</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for expense in expenses %}
+                                    <tr>
+                                        <td>{{ expense.expense_type.name }}</td>
+                                        <td>R$ {{ "%.2f"|format(expense.amount) }}</td>
+                                        <td>{{ expense.description }}</td>
+                                        <td>{{ expense.date.strftime('%d/%m/%Y') }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-bg: #027A88;
+        --secondary-bg: #025864;
+        --accent-color: #F2AB6D;
+        --highlight-color: #D9896C;
+        --text-primary: rgba(255, 255, 255, 0.87);
+    }
+
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .custom-container {
+        width: 100%;
+        max-width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    @media (min-width: 768px) {
+        .custom-container {
+            width: 90%;
+        }
+    }
+
+    .card {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .bg-primary {
+        background-color: var(--primary-bg) !important;
+    }
+
+    .bg-secondary {
+        background-color: var(--secondary-bg) !important;
+    }
+
+    .btn-light {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        color: var(--secondary-bg);
+        transition: all 0.3s ease;
+    }
+
+    .btn-light:hover {
+        background-color: var(--highlight-color);
+        border-color: var(--highlight-color);
+        color: var(--text-primary);
+    }
+
+    .form-control, .form-select {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: var(--text-primary);
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .form-control:focus, .form-select:focus {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-color: var(--accent-color);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 0.25rem rgba(242, 171, 109, 0.25);
+    }
+
+    .table {
+        color: var(--text-primary);
+    }
+
+    .table-dark {
+        --bs-table-bg: rgba(2, 88, 100, 0.8);
+        --bs-table-striped-bg: rgba(2, 88, 100, 0.9);
+        --bs-table-hover-bg: rgba(2, 88, 100, 1);
+    }
+
+    .select-wrapper {
+        position: relative;
+    }
+
+    .select-wrapper::after {
+        content: '\25BC';
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: var(--accent-color);
+    }
+
+    .form-select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        padding-right: 30px;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .form-select:focus {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 0.25rem rgba(242, 171, 109, 0.25);
+    }
+
+    .form-select option {
+        background-color: var(--secondary-bg);
+        color: var(--text-primary);
+    }
+
+    .form-select::-ms-expand {
+        display: none;
+    }
+</style>
+
+{% endblock %}
