@@ -18,9 +18,9 @@ class User(db.Model, UserMixin):
     @property
     def prettier_budget(self):
         if len(str(self.budget)) >= 4:
-            return f"{str(self.budget)[:-3]},{str(self.budget)[-3:]}$ "
+            return f"${str(self.budget)[:-3]},{str(self.budget)[-3:]} "
         else:
-            return f"{self.budget}$"
+            return f"${self.budget}"
 
     @property
     def password(self):
@@ -66,6 +66,13 @@ class Expense(db.Model):
 
     # Relacionamento com User
     user = db.relationship('User', backref='expenses', lazy=True)
+
+    @property
+    def prettier_amount(self):
+        if len(str(self.amount)) >= 4:
+            return f"${str(self.amount)[:-3]},{str(self.amount)[-3:]} "
+        else:
+            return f"${self.amount}"
     
     def __repr__(self):
         return f'<Expense {self.amount} on {self.date}>'

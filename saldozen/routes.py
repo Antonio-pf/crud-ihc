@@ -1,15 +1,36 @@
 from saldozen import app
 from flask import render_template, redirect, url_for, flash, get_flashed_messages, request
-from saldozen.models import User
+from saldozen.models import User, ExpenseType, Expense
 from saldozen.forms import RegisterForm, LoginForm, EditProfileForm
 from saldozen import db
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
+from datetime import datetime
 
 
 @app.route("/")
+
 @app.route("/home")
+@login_required 
 def home_page():
-    return render_template("home.html")
+
+    expenses = Expense.query.filter_by(user_id=current_user.id).order_by(Expense.date.desc()).all()
+
+        ## pegar o total
+    total_expenses = sum(expense.amount for expense in expenses)
+
+        ## pegar a mais recente
+    most_recent_expense = expenses[0] if expenses else 0
+
+    budget = current_user.budget
+        # Calcular a porcentagem do orçamento utilizado
+    percentage_used = (total_expenses / budget * 100) if budget > 0 else 0
+
+    largest_expense = Expense.query.filter_by(user_id=current_user.id).order_by(Expense.amount.desc()).first()
+
+    return render_template("home.html", total_expenses=total_expenses, 
+                            most_recent_expense=most_recent_expense, 
+                            largest_expense=largest_expense, datetime=datetime, percentage_used=percentage_used)
+   
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -70,6 +91,7 @@ def about_page():
     return render_template("about.html")
 
 @app.route("/edit_profile", methods=["GET", "POST"])
+@login_required 
 def edit_profile_page():
     form = EditProfileForm(current_user=current_user)
 
@@ -93,3 +115,33 @@ def edit_profile_page():
     form.username.data = current_user.username
 
     return render_template('profile.html', form=form)
+
+@app.route('/lancamentos', methods=['GET', 'POST'])
+@login_required 
+def expense_page():
+    if request.method == 'POST':
+        # Adicionar uma nova despesa
+        expense_type_id = request.form.get('expense_type_id')
+        amount = request.form.get('amount')
+        description = request.form.get('description')
+
+        # Criar a nova despesa
+        new_expense = Expense(
+            user_id=current_user.id,  # Certifique-se de que o usuário está autenticado
+            expense_type_id=expense_type_id,
+            amount=int(amount),
+            description=description,
+            date=datetime.now()
+        )
+        db.session.add(new_expense)
+
+        ## deduzir do user
+        current_user.budget -= float(amount)
+        
+        db.session.commit()
+        flash('Despesa adicionada com sucesso!', 'success')
+        return redirect(url_for('expense_page'))
+
+    expense_types = ExpenseType.query.all()
+    expenses = Expense.query.filter_by(user_id=current_user.id).all()  # Obter as despesas do usuário atual
+    return render_template("expense.html", expense_types=expense_types, expenses=expenses)
