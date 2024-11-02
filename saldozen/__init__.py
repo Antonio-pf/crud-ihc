@@ -15,6 +15,10 @@ login_manager.init_app(app)
 
 login_manager.login_view = "login_page"
 
+# Personalize a mensagem e a categoria de erro
+login_manager.login_message = "Você precisa fazer login para acessar a conta!"
+login_manager.login_message_category = "danger"
+
 @app.template_filter()
 def days_ago(date):
     return (datetime.now() - date).days if date else 0
