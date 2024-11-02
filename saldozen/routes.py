@@ -56,7 +56,6 @@ def register_page():
 
     return render_template("register.html", form=form)
 
-
 @app.route("/login", methods=["GET", "POST"])
 def login_page():
     form = LoginForm()
@@ -74,9 +73,7 @@ def login_page():
             return redirect(url_for("home_page"))
         else:
             flash(
-               "Nome de usuário e senha não coincidem! Tente novamente", category="danger"
-            )
-
+               "Nome de usuário e senha não coincidem! Tente novamente", category="danger")
     return render_template("login.html", form=form)
 
 
@@ -105,15 +102,13 @@ def edit_profile_page():
         flash('Perfil atualizado com sucesso!', category='success')
         return redirect(url_for('home_page'))  
 
-    # Se o formulário não é válido, mostra os erros
+    # Se o formulário não é válido, mostro os erros
     if form.errors:
         for err_msg in form.errors.values():
             flash(
-                f"Ocorreu um erro ao atualizar o perfil: {err_msg}", category="danger"
-            )
+                f"Ocorreu um erro ao atualizar o perfil: {err_msg}", category="danger")
 
     form.username.data = current_user.username
-
     return render_template('profile.html', form=form)
 
 @app.route('/lancamentos', methods=['GET', 'POST'])
@@ -127,7 +122,7 @@ def expense_page():
 
         # Criar a nova despesa
         new_expense = Expense(
-            user_id=current_user.id,  # Certifique-se de que o usuário está autenticado
+            user_id=current_user.id,  
             expense_type_id=expense_type_id,
             amount=int(amount),
             description=description,
@@ -176,7 +171,6 @@ def export_expense():
         zip_file.writestr("expenses.json", json_data)  
 
     zip_buffer.seek(0)  
-
     return send_file(zip_buffer, as_attachment=True, download_name="expenses.zip", mimetype="application/zip")
 
 
