@@ -5,7 +5,7 @@ from saldozen.forms import RegisterForm, LoginForm, EditProfileForm
 from saldozen import db
 from flask_login import login_user, logout_user, current_user, login_required
 from datetime import datetime
-
+import requests
 
 @app.route("/")
 
@@ -145,3 +145,40 @@ def expense_page():
     expense_types = ExpenseType.query.all()
     expenses = Expense.query.filter_by(user_id=current_user.id).all()  # Obter as despesas do usuário atual
     return render_template("expense.html", expense_types=expense_types, expenses=expenses)
+
+import json
+import io
+import zipfile
+from flask import send_file
+
+# Nova rota para exportar dados de despesas
+@app.route('/export-data')
+@login_required
+def export_expense():
+   
+    expenses = Expense.query.filter_by(user_id=current_user.id).all()
+
+    expenses_data = [
+        {
+            "id": expense.id,
+            "user_id": expense.user_id,
+            "expense_type_id": expense.expense_type_id,
+            "amount": expense.amount,
+            "description": expense.description,
+            "date": expense.date.isoformat() 
+        }
+        for expense in expenses
+    ]
+    json_data = json.dumps(expenses_data, ensure_ascii=False, indent=4)
+
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+        zip_file.writestr("expenses.json", json_data)  
+
+    zip_buffer.seek(0)  
+
+    return send_file(zip_buffer, as_attachment=True, download_name="expenses.zip", mimetype="application/zip")
+
+
+
+
