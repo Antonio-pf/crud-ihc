@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, DecimalField, DateField, SelectField
+from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError, NumberRange
 from saldozen.models import User
 from flask_login import current_user
 
@@ -61,3 +61,18 @@ class EditProfileForm(FlaskForm):
         validators=[EqualTo("password1", message='As senhas não coincidem')]
     )
     submit = SubmitField(label="Salvar Alterações")
+
+class IncomeForm(FlaskForm):
+    amount = DecimalField('Valor', places=2, validators=[DataRequired(), NumberRange(min=0, message="O valor deve ser positivo.")])
+    description = StringField('Descrição', validators=[DataRequired()])
+    date = DateField('Data', format='%Y-%m-%d', validators=[DataRequired()])
+    submit = SubmitField('Adicionar Entrada')
+
+
+
+class ExpenseForm(FlaskForm):
+    amount = DecimalField('Valor', places=2, validators=[DataRequired(), NumberRange(min=0, message="O valor deve ser positivo.")])
+    description = StringField('Descrição', validators=[DataRequired()])
+    date = DateField('Data', format='%Y-%m-%d', validators=[DataRequired()])
+    expense_type_id = SelectField('Tipo de Despesa', coerce=int, validators=[DataRequired()])
+    submit = SubmitField('Adicionar Entrada')

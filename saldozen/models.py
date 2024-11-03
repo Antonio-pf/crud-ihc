@@ -1,7 +1,7 @@
 from saldozen import db, login_manager
 from saldozen import bcrypt
 from flask_login import UserMixin
-
+from sqlalchemy import Numeric
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -12,15 +12,15 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(length=30), nullable=False, unique=True)
     email_address = db.Column(db.String(length=50), nullable=False, unique=True)
-    budget = db.Column(db.Integer(), nullable=False, default=1000)
+    budget = db.Column(Numeric(10, 2), nullable=False, default=1000)
     password_hash = db.Column(db.String(length=60), nullable=False)
 
     @property
     def prettier_budget(self):
-        if len(str(self.budget)) >= 4:
-            return f"${str(self.budget)[:-3]},{str(self.budget)[-3:]} "
-        else:
-            return f"${self.budget}"
+        formatted_budget = f"{self.budget:.2f}"
+        whole, decimal = formatted_budget.split('.')
+        formatted_whole = f"{int(whole):,}".replace(',', '.')
+        return f"${formatted_whole},{decimal}"
 
     @property
     def password(self):
@@ -60,19 +60,33 @@ class Expense(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
     expense_type_id = db.Column(db.Integer(), db.ForeignKey('expense_type.id'), nullable=False)
-    amount = db.Column(db.Integer(), nullable=False)  # Valor da despesa
-    date = db.Column(db.DateTime(), nullable=False)  # Data da despesa
-    description = db.Column(db.String(length=200), nullable=True)  # Descrição da despesa
+    amount = db.Column(Numeric(10, 2), nullable=False)  
+    date = db.Column(db.DateTime(), nullable=False)  
+    description = db.Column(db.String(length=200), nullable=True)  
 
     # Relacionamento com User
     user = db.relationship('User', backref='expenses', lazy=True)
 
     @property
     def prettier_amount(self):
-        if len(str(self.amount)) >= 4:
-            return f"${str(self.amount)[:-3]},{str(self.amount)[-3:]} "
-        else:
-            return f"${self.amount}"
+        formatted_amount = f"{self.amount:.2f}"
+        whole, decimal = formatted_amount.split('.')
+        formatted_whole = f"{int(whole):,}".replace(',', '.')
+        return f"${formatted_whole},{decimal}"
+
     
     def __repr__(self):
         return f'<Expense {self.amount} on {self.date}>'
+
+
+class Income(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
+    amount = db.Column(Numeric(10, 2), nullable=False) 
+    description = db.Column(db.String(length=200), nullable=True)
+    date = db.Column(db.DateTime(), nullable=False)
+
+    user = db.relationship('User', backref='incomes', lazy=True)
+
+    def __repr__(self):
+        return f'<Income {self.amount} on {self.date}>'

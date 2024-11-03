@@ -1,36 +1,79 @@
 from saldozen import app
 from flask import render_template, redirect, url_for, flash, get_flashed_messages, request
-from saldozen.models import User, ExpenseType, Expense
-from saldozen.forms import RegisterForm, LoginForm, EditProfileForm
+from saldozen.models import User, ExpenseType, Expense, Income
+from saldozen.forms import RegisterForm, LoginForm, EditProfileForm, IncomeForm, ExpenseForm
 from saldozen import db
 from flask_login import login_user, logout_user, current_user, login_required
 from datetime import datetime
 import requests
+from decimal import Decimal
+import json
+import io
+import zipfile
+from flask import send_file
 
 @app.route("/")
-
 @app.route("/home")
 @login_required 
 def home_page():
-
+    # Carregar as despesas do usuário atual
     expenses = Expense.query.filter_by(user_id=current_user.id).order_by(Expense.date.desc()).all()
 
-        ## pegar o total
+    # Calcular o total de despesas
     total_expenses = sum(expense.amount for expense in expenses)
+    print(type(total_expenses))  
 
-        ## pegar a mais recente
-    most_recent_expense = expenses[0] if expenses else 0
+    # Pegar a despesa mais recente
+    most_recent_expense = expenses[0] if expenses else None
 
+    # Pegar o orçamento do usuário
     budget = current_user.budget
-        # Calcular a porcentagem do orçamento utilizado
-    percentage_used = (total_expenses / budget * 100) if budget > 0 else 0
+    print(type(budget))  
 
+    percentage_used = (total_expenses / budget * 100) if budget > 0 else 0
     largest_expense = Expense.query.filter_by(user_id=current_user.id).order_by(Expense.amount.desc()).first()
 
-    return render_template("home.html", total_expenses=total_expenses, 
-                            most_recent_expense=most_recent_expense, 
-                            largest_expense=largest_expense, datetime=datetime, percentage_used=percentage_used)
+    expense_types = ExpenseType.query.all()
+    formIncome = IncomeForm()
+    formExpense = ExpenseForm()
+    if formIncome.validate_on_submit():
+        new_income = Income(
+            user_id=current_user.id,
+            amount=Decimal(formIncome.amount.data),  
+            description=formIncome.description.data,
+            date=formIncome.date.data or datetime.now()
+        )
+        db.session.add(new_income)
+
+        current_user.budget += new_income.amount
+        db.session.commit()
+
+        flash('Entrada de receita adicionada com sucesso!', 'success')
+        return redirect(url_for('home_page'))  
    
+    if formExpense.validate_on_submit():
+        new_expense = Expense(
+            user_id=current_user.id,
+            amount=Decimal(formExpense.amount.data),  
+            description=formExpense.description.data,
+            date=formExpense.date.data or datetime.now()
+        )
+        db.session.add(new_expense)
+        db.session.commit()
+
+        flash('Entrada de despesa adicionada com sucesso!', 'success')
+        return redirect(url_for('home_page'))
+
+    return render_template("home.html", 
+                           total_expenses=total_expenses, 
+                           most_recent_expense=most_recent_expense, 
+                           largest_expense=largest_expense, 
+                           datetime=datetime, 
+                           percentage_used=percentage_used, 
+                           formIncome=formIncome, 
+                           formExpense=formExpense,
+                           expense_types=expense_types
+                           )
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -120,7 +163,6 @@ def expense_page():
         amount = request.form.get('amount')
         description = request.form.get('description')
 
-        # Criar a nova despesa
         new_expense = Expense(
             user_id=current_user.id,  
             expense_type_id=expense_type_id,
@@ -130,7 +172,7 @@ def expense_page():
         )
         db.session.add(new_expense)
 
-        ## deduzir do user
+        ## a cada entrada de despesa é debitado do saldo total
         current_user.budget -= float(amount)
         
         db.session.commit()
@@ -141,17 +183,15 @@ def expense_page():
     expenses = Expense.query.filter_by(user_id=current_user.id).all()  # Obter as despesas do usuário atual
     return render_template("expense.html", expense_types=expense_types, expenses=expenses)
 
-import json
-import io
-import zipfile
-from flask import send_file
-
-# Nova rota para exportar dados de despesas
 @app.route('/export-data')
 @login_required
 def export_expense():
    
     expenses = Expense.query.filter_by(user_id=current_user.id).all()
+
+    if len(expenses) == 0: 
+        flash('Não há despesas para exportar!', 'info')
+        return redirect(url_for('home_page'))
 
     expenses_data = [
         {
@@ -171,8 +211,59 @@ def export_expense():
         zip_file.writestr("expenses.json", json_data)  
 
     zip_buffer.seek(0)  
+
     return send_file(zip_buffer, as_attachment=True, download_name="expenses.zip", mimetype="application/zip")
 
 
+@app.route('/add_income', methods=['GET', 'POST'])
+@login_required
+def add_income():
+    formIncome = IncomeForm()
+    if formIncome.validate_on_submit():
+ 
+        new_income = Income(
+            user_id=current_user.id,
+            amount=formIncome.amount.data,
+            description=formIncome.description.data,
+            date=formIncome.date.data
+        )
+        db.session.add(new_income)
 
+        # Atualizar o budget do usuário
+        current_user.budget += formIncome.amount.data  # Adiciona a nova entrada ao budget
 
+        db.session.commit()
+        flash('Entrada adicionada com sucesso!', 'success')
+        return redirect(url_for('home_page'))
+
+    return render_template('add_income.html', formIncome=formIncome)
+
+@app.route('/add-expense', methods=['GET', 'POST'])
+@login_required
+def add_expense():
+    formExpense = ExpenseForm()
+
+    formExpense.expense_type_id.choices = [(et.id, et.name) for et in ExpenseType.query.all()]
+
+    if formExpense.validate_on_submit():
+        input_date = formExpense.date.data
+
+        new_expense = Expense(
+            user_id=current_user.id, 
+            expense_type_id=formExpense.expense_type_id.data,  
+            amount=formExpense.amount.data,  
+            date=datetime.combine(input_date, datetime.now().time()), 
+            description=formExpense.description.data 
+        )
+        
+        db.session.add(new_expense)
+        
+        current_user.budget -= new_expense.amount 
+        db.session.commit()  
+
+        flash('Despesa adicionada com sucesso!', 'success') 
+        return redirect(url_for('home_page'))  
+    else:
+        print(formExpense.errors) 
+
+    return render_template("home_page.html", formExpense=formExpense)   

@@ -14,7 +14,7 @@ Home - Despesas pessoais
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-md-6">
-                            <h2 class="card-title h4 mb-3 text-start">Total</h2>
+                            <h2 class="card-title h4 mb-3 text-start">Total na carteira</h2>
                             <div class="d-flex align-items-baseline">
                                 <p class="display-4 mb-0 me-3">{{ current_user.prettier_budget }}</p>
                                 <span class="text-success fs-5">
@@ -24,14 +24,17 @@ Home - Despesas pessoais
                         </div>
                         <div class="col-md-6 mt-3 mt-md-0">
                             <div class="d-flex justify-content-md-end gap-3">
-                                <a href="#" class="btn btn-light d-flex flex-column align-items-center">
+                                <a href="#" class="btn btn-light d-flex flex-column align-items-center" data-bs-toggle="modal" data-bs-target="#incomeModal">
                                     <i class="bi bi-piggy-bank-fill fs-2 mb-1"></i>
                                     <span>Entrada</span>
                                 </a>
-                                <a href="#" class="btn btn-light d-flex flex-column align-items-center">
+                                <a href="#" class="btn btn-light d-flex flex-column align-items-center" data-bs-toggle="modal" data-bs-target="#modalExpenses">
                                     <i class="bi bi-receipt fs-2 mb-1"></i>
                                     <span>Despesas</span>
                                 </a>
+
+                                <!-- Button trigger modal -->
+
                                 <a href="{{ url_for('export_expense') }}" id="export-button" class="btn btn-light d-flex flex-column align-items-center">
                                     <i class="bi bi-file-earmark-arrow-down-fill fs-2 mb-1"></i>
                                     <span>Exportar</span>
@@ -49,7 +52,7 @@ Home - Despesas pessoais
                     
                     <h3 class="card-title h5 mb-3">Despesas totais</h3>
                     {% if most_recent_expense %}
-                        <p class="display-5 mb-2">{{ total_expenses }}</p>
+                        <p class="display-5 mb-2">{{ total_expenses | currency }}</p>
                         <p class="mb-0 text-success">
                             <i class="bi bi-arrow-up me-1"></i>5% do mês passado
                         </p>
@@ -99,6 +102,83 @@ Home - Despesas pessoais
                     {% endif %}
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<!-- Modal for Adding Income -->
+<div class="modal fade" id="incomeModal" tabindex="-1" role="dialog" aria-labelledby="incomeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bg-primary text-white">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="incomeModalLabel">Adicionar Entrada</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{{ url_for('add_income') }}">
+                <div class="modal-body">
+                    {{ formIncome.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ formIncome.amount.label(class="form-label") }}
+                        {{ formIncome.amount(class="form-control bg-light-primary", placeholder="Valor da entrada") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ formIncome.description.label(class="form-label") }}
+                        {{ formIncome.description(class="form-control bg-light-primary", placeholder="Descrição da entrada") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ formIncome.date.label(class="form-label") }}
+                        {{ formIncome.date(class="form-control bg-light-primary", type="date") }}
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-light">Adicionar Entrada</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Adding Expenses -->
+<div class="modal fade" id="modalExpenses" tabindex="-1" aria-labelledby="expensesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bg-secondary text-white">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="expensesModalLabel">Adicionar Despesa</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{{ url_for('add_expense') }}">
+                <div class="modal-body">
+                    {{ formExpense.hidden_tag() }}
+                    <div class="mb-3">
+                        <label for="expense_type_id" class="form-label">Categoria</label>
+                        <div class="select-wrapper">
+                            <select name="expense_type_id" id="expense_type_id" class="form-select bg-light-secondary" required>
+                                <option value="">Selecione a Categoria</option>
+                                {% for expense_type in expense_types %}
+                                    <option value="{{ expense_type.id }}">{{ expense_type.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {{ formExpense.amount.label(class="form-label") }}
+                        {{ formExpense.amount(class="form-control bg-light-secondary", placeholder="Valor da despesa") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ formExpense.description.label(class="form-label") }}
+                        {{ formExpense.description(class="form-control bg-light-secondary", placeholder="Descrição da despesa") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ formExpense.date.label(class="form-label") }}
+                        {{ formExpense.date(class="form-control bg-light-secondary", type="date") }}
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-light">Adicionar Despesa</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

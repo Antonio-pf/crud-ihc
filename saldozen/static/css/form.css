@@ -1,0 +1,41 @@
+@import url(app.css);
+
+
+.select-wrapper {
+    position: relative;
+}
+
+.select-wrapper::after {
+    content: '\25BC';
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--accent-color);
+}
+
+.form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 30px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.form-select:focus {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.25rem rgba(242, 171, 109, 0.25);
+}
+
+.form-select option {
+    background-color: var(--secondary-bg);
+    color: var(--text-primary);
+}
+
+.form-select::-ms-expand {
+    display: none;
+}

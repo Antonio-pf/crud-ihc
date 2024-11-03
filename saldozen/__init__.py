@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from datetime import datetime
+from .utils import format_currency 
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./saldozen.db"
@@ -19,17 +20,21 @@ login_manager.login_view = "login_page"
 login_manager.login_message = "Você precisa fazer login para acessar a conta!"
 login_manager.login_message_category = "danger"
 
+@app.template_filter('currency')
+def currency_filter(amount):
+    return format_currency(amount)
+
 @app.template_filter()
 def days_ago(date):
     return (datetime.now() - date).days if date else 0
 
 @app.template_filter('prettier_amount')
 def prettier_amount(amount):
-    """Format a number as a currency string."""
     if len(str(amount)) >= 4:
         return f"${str(amount)[:-3]},{str(amount)[-3:]}"
     else:
         return f"${amount}"
+    
 
 from saldozen import routes
 # Importar modelos após a criação do db
