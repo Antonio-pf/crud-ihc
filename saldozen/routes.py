@@ -197,10 +197,10 @@ def export_expense():
 
     expenses_data = [
         {
-            "id": expense.id,
+            "id_expense": expense.id,
             "user_id": expense.user_id,
             "expense_type_id": expense.expense_type_id,
-            "amount": expense.amount,
+            "amount": float(expense.amount),
             "description": expense.description,
             "date": expense.date.isoformat() 
         }
