@@ -97,7 +97,7 @@ def register_page():
             flash(
                 f"Ocorreu um erro ao criar usuário: {err_msg}", category="danger")
 
-    return render_template("register.html", form=form)
+    return render_template("user/register.html", form=form)
 
 @app.route("/login", methods=["GET", "POST"])
 def login_page():
@@ -117,7 +117,7 @@ def login_page():
         else:
             flash(
                "Nome de usuário e senha não coincidem! Tente novamente", category="danger")
-    return render_template("login.html", form=form)
+    return render_template("user/login.html", form=form)
 
 
 @app.route("/logout")
@@ -130,7 +130,7 @@ def logout_page():
 def about_page():
     return render_template("about.html")
 
-@app.route("/edit_profile", methods=["GET", "POST"])
+@app.route("/editar", methods=["GET", "POST"])
 @login_required 
 def edit_profile_page():
     form = EditProfileForm(current_user=current_user)
@@ -152,7 +152,7 @@ def edit_profile_page():
                 f"Ocorreu um erro ao atualizar o perfil: {err_msg}", category="danger")
 
     form.username.data = current_user.username
-    return render_template('profile.html', form=form)
+    return render_template('user/profile.html', form=form)
 
 @app.route('/despesas', methods=['GET', 'POST'])
 @login_required 
@@ -181,7 +181,7 @@ def expense_page():
 
     expense_types = ExpenseType.query.all()
     expenses = Expense.query.filter_by(user_id=current_user.id).all()  # Obter as despesas do usuário atual
-    return render_template("expense.html", expense_types=expense_types, expenses=expenses)
+    return render_template("expense/expense.html", expense_types=expense_types, expenses=expenses)
 
 @app.route('/export-data')
 @login_required
