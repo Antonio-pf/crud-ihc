@@ -53,6 +53,7 @@
                                     <th>Valor</th>
                                     <th>Descrição</th>
                                     <th>Data</th>
+                                    <th class="text-center">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,6 +63,12 @@
                                         <td>R$ {{ "%.2f"|format(expense.amount) }}</td>
                                         <td>{{ expense.description }}</td>
                                         <td>{{ expense.date.strftime('%d/%m/%Y') }}</td>
+                                        <td class="text-center">
+                                            <!-- Link para deletar despesa -->
+                                            <a href="{{ url_for('delete_expense', id_expense=expense.id) }}" class="cursor-pointer text-danger" onclick="return confirm('Deseja realmente excluir esta despesa?');">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>

@@ -87,7 +87,7 @@ def register_page():
         )
         db.session.add(user_to_create)
         db.session.commit()
-        flash("Você foi desconectado!", category="success")
+        flash("Bem-vindo...seja zen!", category="success")
 
         login_user(user_to_create)
 
@@ -154,7 +154,7 @@ def edit_profile_page():
     form.username.data = current_user.username
     return render_template('profile.html', form=form)
 
-@app.route('/lancamentos', methods=['GET', 'POST'])
+@app.route('/despesas', methods=['GET', 'POST'])
 @login_required 
 def expense_page():
     if request.method == 'POST':
@@ -267,3 +267,18 @@ def add_expense():
         print(formExpense.errors) 
 
     return render_template("home_page.html", formExpense=formExpense)   
+
+
+@app.route('/delete-expense/<int:id_expense>', methods=['GET'])
+@login_required
+def delete_expense(id_expense):
+    expense = Expense.query.get(id_expense)
+    user = current_user
+    if expense:
+        user.budget += expense.amount
+        db.session.delete(expense)
+        db.session.commit()
+        flash("Despesa excluída com sucesso.", "success")
+    else:
+        flash("Despesa não encontrada.", "error")
+    return redirect(url_for('expense_page')) 
