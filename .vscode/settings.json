@@ -1,5 +1,13 @@
 {
     "python.analysis.extraPaths": [
         "./saldozen"
+    ],
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "saldozen",
+            "database": "${workspaceFolder:crud-ihc}/instance/saldozen.db"
+        }
     ]
 }

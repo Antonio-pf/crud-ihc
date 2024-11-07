@@ -173,7 +173,7 @@ def expense_page():
         db.session.add(new_expense)
 
         ## a cada entrada de despesa é debitado do saldo total
-        current_user.budget -= float(amount)
+        current_user.budget -= Decimal(amount)
         
         db.session.commit()
         flash('Despesa adicionada com sucesso!', 'success')
@@ -188,7 +188,8 @@ def expense_page():
 def export_expense():
    
     expenses = Expense.query.filter_by(user_id=current_user.id).all()
-
+    print('pasou')
+    print(expenses)
     if len(expenses) == 0: 
         flash('Não há despesas para exportar!', 'info')
         return redirect(url_for('home_page'))
