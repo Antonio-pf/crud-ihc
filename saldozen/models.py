@@ -2,6 +2,7 @@ from saldozen import db, login_manager
 from saldozen import bcrypt
 from flask_login import UserMixin
 from sqlalchemy import Numeric
+from datetime import datetime, timedelta
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -73,8 +74,29 @@ class Expense(db.Model):
         whole, decimal = formatted_amount.split('.')
         formatted_whole = f"{int(whole):,}".replace(',', '.')
         return f"${formatted_whole},{decimal}"
-
     
+    @staticmethod
+    def get_expenses_last_month(user_id):
+        now = datetime.now()
+        first_day_of_last_month = datetime(now.year, now.month - 1, 1) if now.month > 1 else datetime(now.year - 1, 12, 1)
+        last_day_of_last_month = datetime(now.year, now.month, 1) - timedelta(days=1)
+        
+        # retorno as despesas do mes passado
+        return Expense.query.filter(
+            Expense.user_id == user_id,
+            Expense.date >= first_day_of_last_month,
+            Expense.date <= last_day_of_last_month
+        ).order_by(Expense.date.desc()).all()
+
+    @staticmethod
+    def get_expenses_last_month_sum(user_id):
+        # Obtendo a coleção de despesas do mês passado
+        expenses = Expense.get_expenses_last_month(user_id)
+        
+        # Calculando a soma dos valores diretamente da coleção
+        total_sum = sum(expense.amount for expense in expenses)
+
+        return total_sum
     def __repr__(self):
         return f'<Expense {self.amount} on {self.date}>'
 

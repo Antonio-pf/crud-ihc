@@ -16,11 +16,14 @@ Home - Despesas pessoais
                         <div class="col-md-6">
                             <h2 class="card-title h4 mb-3 text-start">Total na carteira</h2>
                             <div class="d-flex align-items-baseline">
-                                <p class="display-4 mb-0 me-3">{{ current_user.prettier_budget }}</p>
-                                <span class="text-success fs-5">
+                                <p class="display-4 mb-0 me-3" data-bs-toggle="tooltip" data-bs-placement="top" title="Orçamento disponível"> 
+                                    {{ current_user.prettier_budget }}
+                                </p>
+                                <span class="text-success fs-5" data-bs-toggle="tooltip" data-bs-placement="top" title="Porcentagem do orçamento utilizado">
                                     <i class="bi bi-arrow-up-right-circle me-1"></i>{{ percentage_used | round(2) }}%
                                 </span>
                             </div>
+                            
                         </div>
                         <div class="col-md-6 mt-3 mt-md-0">
                             <div class="d-flex justify-content-md-end gap-3">
@@ -53,8 +56,15 @@ Home - Despesas pessoais
                     <h3 class="card-title h5 mb-3">Despesas totais</h3>
                     {% if most_recent_expense %}
                         <p class="display-5 mb-2">{{ total_expenses | currency }}</p>
-                        <p class="mb-0 text-success">
-                            <i class="bi bi-arrow-up me-1"></i>5% do mês passado
+                        <p class="mb-0 text-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Total de despesas atuais em relação ao mês passado">
+                            {% if total_expenses_last_month > 0  %}
+                                {% if total_expenses_last_month > total_expenses  %}
+                                    <i class="bi bi-arrow-up me-1"></i>{{ ((total_expenses_last_month / total_expenses) * 100) | round(2) }}%
+                                {% else %}
+                                    {% set arrow_icon = "bi-arrow-down" %}
+                                    <i class="bi bi-arrow-down me-1"></i>{{ ((total_expenses_last_month / total_expenses) * 100) | round(2) }}%
+                                {% endif %}
+                            {% endif %}
                         </p>
                     {% else %}
                         <p>Você ainda não registrou nenhuma despesa.</p>
@@ -81,7 +91,7 @@ Home - Despesas pessoais
             <div class="card bg-secondary text-white h-100">
                 <div class="card-body">
                     <h3 class="card-title h5 mb-3">Orçamento</h3>
-                    <p class="display-5 mb-2">75%</p>
+                    <p class="display-5 mb-2">{{ percentage_used }}%</p>
                     <p class="mb-0 text-info">$265.44 restante</p>
                 </div>
             </div>

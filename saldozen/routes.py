@@ -20,19 +20,19 @@ def home_page():
     expenses = Expense.query.filter_by(user_id=current_user.id).order_by(Expense.date.desc()).all()
 
     # Calcular o total de despesas
-    total_expenses = sum(expense.amount for expense in expenses)
-    print(type(total_expenses))  
+    total_expenses = sum(expense.amount for expense in expenses) 
 
     # Pegar a despesa mais recente
     most_recent_expense = expenses[0] if expenses else None
 
     # Pegar o orçamento do usuário
     budget = current_user.budget
-    print(type(budget))  
 
-    percentage_used = (total_expenses / budget * 100) if budget > 0 else 0
+    percentage_used = round((total_expenses / (budget+total_expenses) * 100), 2)if budget > 0 else 0
     largest_expense = Expense.query.filter_by(user_id=current_user.id).order_by(Expense.amount.desc()).first()
 
+    total_expenses_last_month = Expense.get_expenses_last_month_sum(current_user.id)
+    
     expense_types = ExpenseType.query.all()
     formIncome = IncomeForm()
     formExpense = ExpenseForm()
@@ -72,7 +72,8 @@ def home_page():
                            percentage_used=percentage_used, 
                            formIncome=formIncome, 
                            formExpense=formExpense,
-                           expense_types=expense_types
+                           expense_types=expense_types,
+                           total_expenses_last_month=total_expenses_last_month
                            )
 
 
