@@ -50,9 +50,17 @@
               <li class="nav-item">
                   <a class="nav-link {% if request.path == url_for('home_page') %}active{% endif %}" aria-current="page" href="{{ url_for('home_page') }}">Visão geral</a>
               </li>
+
+              <li class="nav-item">
+                <a class="nav-link {% if request.path == url_for('income_page') %}active{% endif %}" href="{{ url_for('income_page') }}">Entradas</a>
+            </li>
+
+            
               <li class="nav-item">
                   <a class="nav-link {% if request.path == url_for('expense_page') %}active{% endif %}" href="{{ url_for('expense_page') }}">Despesas</a>
               </li>
+
+           
           </ul>
           
             <ul class="navbar-nav">

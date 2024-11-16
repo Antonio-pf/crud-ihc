@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %} 
+    Entradas - SaldoZen
+{% endblock %} 
+
+{% block content %}
+<div class="container-fluid py-4 custom-container w-75">
+    <h1 class="text-center text-white mb-4">Gerenciar Entradas</h1>
+    
+    <div class="row g-4">
+        <!-- Adicionar Despesa Card -->
+        <div class="col-md-6">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h2 class="card-title h4 mb-3">Adicionar Entrada</h2>
+                    <form method="POST" action="{{ url_for('add_income') }}">
+                        <div class="modal-body">
+                            {{ formIncome.hidden_tag() }}
+                            <div class="mb-3">
+                                {{ formIncome.amount.label(class="form-label") }}
+                                {{ formIncome.amount(class="form-control bg-light-primary", placeholder="Valor da entrada") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ formIncome.description.label(class="form-label") }}
+                                {{ formIncome.description(class="form-control bg-light-primary", placeholder="Descrição da entrada") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ formIncome.date.label(class="form-label") }}
+                                {{ formIncome.date(class="form-control bg-light-primary", type="date") }}
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="submit" class="btn btn-light">Adicionar Entrada</button>
+                        </div>
+                    </form>
+                    <!-- <form method="POST" class="expense-form">
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Valor</label>
+                            <input type="number" name="amount" id="amount" class="form-control" placeholder="Valor" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descrição</label>
+                            <input type="text" name="description" id="description" class="form-control" placeholder="Descrição">
+                        </div>
+                        <button type="submit" class="btn btn-light w-100">Adicionar Entrada</button>
+                    </form> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Despesas Registradas Card -->
+        <div class="col-md-6">
+            <div class="card bg-secondary text-white">
+                <div class="card-body">
+                    <h2 class="card-title h4 mb-3">Entradas Registradas</h2>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                    <th>Data</th>
+                                    <th class="text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for income in incomes.items %}
+                                    <tr>
+                                        <td>{{ income.description }}</td>
+                                        <td>R$ {{ "%.2f"|format(income.amount) }}</td>
+                                        <td>{{ income.date.strftime('%d/%m/%Y') }}</td>
+                                        <td class="text-center">
+                                            <a href="{{ url_for('delete_income', id_income=income.id) }}" class="cursor-pointer text-danger" onclick="return confirm('Deseja realmente excluir esta despesa?');">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+        
+                        <!-- Paginacao -->
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <span>Exibindo página {{ incomes.page }} de {{ incomes.pages }}</span>
+                            </div>
+                            <div>
+                                <ul class="pagination">
+                                    {% if incomes.has_prev %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('expense_page', page=incomes.prev_num) }}">&laquo; Anterior</a>
+                                        </li>
+                                    {% endif %}
+                                    {% if incomes.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('expense_page', page=incomes.next_num) }}">Próximo &raquo;</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}

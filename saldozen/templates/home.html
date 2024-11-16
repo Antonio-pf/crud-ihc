@@ -6,7 +6,29 @@ Home - Despesas pessoais
 
 {% block content %}
 <div class="container-fluid py-4 custom-container">
-    <h1 class="text-center text-white mb-4">Despesas Pessoais</h1>
+    <section class="d-flex justify-content-between mb-4">
+
+        <div class="flex-column align-items-center justify-content-start">
+            <h1 class="text-start text-white">Despesas Pessoais</h1>
+            <p class="text-start">Acompanhe suas finanças de forma simples e eficiente</p>
+        </div>
+
+        <div>
+                                             
+            <div class="d-flex justify-content-end gap-3">
+                <a href="#" class="btn btn-light d-flex flex-column align-items-center" data-bs-toggle="modal" data-bs-target="#incomeModal">
+                    <i class="bi bi-piggy-bank-fill fs-2 mb-1"></i>
+                    <span>Entrada</span>
+                </a>
+                <a href="#" class="btn btn-light d-flex flex-column align-items-center" data-bs-toggle="modal" data-bs-target="#modalExpenses">
+                    <i class="bi bi-receipt fs-2 mb-1"></i>
+                    <span>Despesas</span>
+                </a>                              
+            </div>
+        </div>
+        
+    </section>
+   
     <div class="row g-4">
         <!-- Total Card -->
         <div class="col-12">

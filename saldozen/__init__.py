@@ -36,6 +36,6 @@ def prettier_amount(amount):
         return f"${amount}"
     
 
-from saldozen import routes
+from .routes import routes
 # Importar modelos após a criação do db
 from saldozen.models import ExpenseType 

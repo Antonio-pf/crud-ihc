@@ -173,7 +173,7 @@ def expense_page():
         )
         db.session.add(new_expense)
 
-        ## a cada entrada de despesa é debitado do saldo total
+        # a cada entrada de despesa é debitado do saldo total
         current_user.budget -= Decimal(amount)
         
         db.session.commit()
@@ -181,7 +181,13 @@ def expense_page():
         return redirect(url_for('expense_page'))
 
     expense_types = ExpenseType.query.all()
-    expenses = Expense.query.filter_by(user_id=current_user.id).all()  # Obter as despesas do usuário atual
+
+    # Paginação
+    per_page = 10
+    page = request.args.get('page', 1, type=int)  
+    expenses = Expense.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=per_page, error_out=False)
+
+
     return render_template("expense/expense.html", expense_types=expense_types, expenses=expenses)
 
 @app.route('/export-data')
@@ -235,8 +241,12 @@ def add_income():
         current_user.budget += formIncome.amount.data  # Adiciona a nova entrada ao budget
 
         db.session.commit()
-        flash('Entrada adicionada com sucesso!', 'success')
-        return redirect(url_for('home_page'))
+        flash('Dinheiro adicionado com sucesso!', 'success')
+        # Verificar se a requisição veio da página de receitas
+        if request.referrer and 'entradas' in request.referrer:
+            return redirect(url_for('income_page'))  # Redireciona para a página de receitas
+        else:
+            return redirect(url_for('home_page')) 
 
     return render_template('add_income.html', formIncome=formIncome)
 
@@ -284,3 +294,53 @@ def delete_expense(id_expense):
     else:
         flash("Despesa não encontrada.", "error")
     return redirect(url_for('expense_page')) 
+
+@app.route('/entradas', methods=['GET', 'POST'])
+@login_required 
+def income_page():
+    if request.method == 'POST':
+        # Adicionar uma nova despesa
+        expense_type_id = request.form.get('expense_type_id')
+        amount = request.form.get('amount')
+        description = request.form.get('description')
+
+        new_expense = Expense(
+            user_id=current_user.id,  
+            expense_type_id=expense_type_id,
+            amount=int(amount),
+            description=description,
+            date=datetime.now()
+        )
+        db.session.add(new_expense)
+
+        # a cada entrada de despesa é debitado do saldo total
+        current_user.budget += Decimal(amount)
+        
+        db.session.commit()
+        flash('Dinheiro adicionada ao cofre!', 'success')
+        return redirect(url_for('income_page'))
+
+    expense_types = ExpenseType.query.all()
+
+    # Paginação
+    per_page = 10
+    page = request.args.get('page', 1, type=int)  
+    incomes = Income.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=per_page, error_out=False)
+    formIncome = IncomeForm()
+
+    return render_template("income/income.html", expense_types=expense_types, incomes=incomes, formIncome=formIncome)
+
+
+@app.route('/delete-income/<int:id_income>', methods=['GET'])
+@login_required
+def delete_income(id_income):
+    income = Income.query.get(id_income)
+    user = current_user
+    if income:
+        user.budget -= income.amount
+        db.session.delete(income)
+        db.session.commit()
+        flash("Entrada excluída com sucesso.", "success")
+    else:
+        flash("Entrada não encontrada.", "error")
+    return redirect(url_for('income_page')) 
