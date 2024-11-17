@@ -237,14 +237,12 @@ def add_income():
         )
         db.session.add(new_income)
 
-        # Atualizar o budget do usuário
-        current_user.budget += formIncome.amount.data  # Adiciona a nova entrada ao budget
+        current_user.budget += formIncome.amount.data 
 
         db.session.commit()
         flash('Dinheiro adicionado com sucesso!', 'success')
-        # Verificar se a requisição veio da página de receitas
         if request.referrer and 'entradas' in request.referrer:
-            return redirect(url_for('income_page'))  # Redireciona para a página de receitas
+            return redirect(url_for('income_page')) 
         else:
             return redirect(url_for('home_page')) 
 
