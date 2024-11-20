@@ -185,4 +185,41 @@ body {
     }
 }
 
+.progress-bar {
+    background-color: #56acce;
+}
 
+.nav-tabs .nav-link {
+    color: var(--text-primary);
+    background-color: var(--secondary-bg);
+    border-color: var(--secondary-bg);
+  }
+
+  .nav-tabs .nav-link:hover {
+    border-color: var(--accent-color);
+  }
+
+  .nav-tabs .nav-link.active {
+    color: var(--primary-bg);
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+  }
+
+  .progress-bar-custom {
+    background-color: var(--highlight-color);
+  }
+
+  .card-custom .card-header {
+    background-color: var(--secondary-bg);
+    color: var(--text-primary);
+  }
+
+
+  .inner-card {
+    background-color: var(--secondary-bg);
+  }
+  
+  .inner-card .card-title,
+  .inner-card h2 {
+    color: var(--text-primary);
+  }

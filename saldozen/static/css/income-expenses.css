@@ -40,7 +40,7 @@
     border-color: var(--highlight-color);
     color: var(--text-primary);
 }
-
+/* 
 .form-control,
 .form-select {
     background-color: rgba(255, 255, 255, 0.1);
@@ -50,15 +50,15 @@
 
 .form-control::placeholder {
     color: rgba(255, 255, 255, 0.5);
-}
+} */
 
-.form-control:focus,
+/* .form-control:focus,
 .form-select:focus {
     background-color: rgba(255, 255, 255, 0.2);
     border-color: var(--accent-color);
     color: var(--text-primary);
     box-shadow: 0 0 0 0.25rem rgba(242, 171, 109, 0.25);
-}
+} */
 
 .table {
     color: var(--text-primary);
