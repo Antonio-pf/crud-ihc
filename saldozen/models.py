@@ -1,8 +1,9 @@
 from saldozen import db, login_manager
 from saldozen import bcrypt
 from flask_login import UserMixin
-from sqlalchemy import Numeric
+from sqlalchemy import Numeric, func, label
 from datetime import datetime, timedelta
+from decimal import Decimal
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -97,6 +98,57 @@ class Expense(db.Model):
         total_sum = sum(expense.amount for expense in expenses)
 
         return total_sum
+    @staticmethod
+    def get_expenses_percentage(user_id, total_income):
+        if total_income == 0:
+            raise ValueError("O total de receitas não pode ser zero.")
+        total_income_decimal = Decimal(total_income)
+
+
+        top_expenses = (
+            db.session.query(
+                Expense.expense_type_id,
+                ExpenseType.name,  # Incluindo o nome do tipo de despesa
+                label('total', func.sum(Expense.amount))
+            )
+            .join(ExpenseType, Expense.expense_type_id == ExpenseType.id)  # Realizando o join
+            .filter(Expense.user_id == user_id)
+            .group_by(Expense.expense_type_id, ExpenseType.name)  # Agrupando pelo nome do tipo
+            .order_by(func.sum(Expense.amount).desc())
+            .limit(3)
+            .all()
+        )
+
+        top_ids = [expense.expense_type_id for expense in top_expenses]
+
+        other_expenses = (
+            db.session.query(
+                label('total', func.sum(Expense.amount))
+            )
+            .filter(
+                Expense.user_id == user_id,
+                ~Expense.expense_type_id.in_(top_ids)
+            )
+            .scalar() or 0
+        )
+
+        results = [
+            {
+                "type": expense.name,
+                "total": expense.total,
+                "percentage": round((expense.total / total_income_decimal) * 100, 2),
+            }
+            for expense in top_expenses
+        ]
+
+        results.append({
+            "type": "Outros",
+            "total": other_expenses,
+            "percentage": round((other_expenses / total_income_decimal) * 100, 2),
+        })
+
+        return results
+    
     def __repr__(self):
         return f'<Expense {self.amount} on {self.date}>'
 
@@ -109,6 +161,16 @@ class Income(db.Model):
     date = db.Column(db.DateTime(), nullable=False)
 
     user = db.relationship('User', backref='incomes', lazy=True)
+
+
+    @staticmethod
+    def get_total_income(user_id):
+        total_income = (
+            db.session.query(func.sum(Income.amount))
+            .filter(Income.user_id == user_id)
+            .scalar() or 0
+        )
+        return float(total_income)
 
     def __repr__(self):
         return f'<Income {self.amount} on {self.date}>'

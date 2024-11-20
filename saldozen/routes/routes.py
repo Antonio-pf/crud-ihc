@@ -36,6 +36,12 @@ def home_page():
     expense_types = ExpenseType.query.all()
     formIncome = IncomeForm()
     formExpense = ExpenseForm()
+    total_income = Income.get_total_income(current_user.id)
+
+
+    expenses_data = Expense.get_expenses_percentage(current_user.id, total_income)
+    print(expenses_data)
+
     if formIncome.validate_on_submit():
         new_income = Income(
             user_id=current_user.id,
@@ -73,7 +79,8 @@ def home_page():
                            formIncome=formIncome, 
                            formExpense=formExpense,
                            expense_types=expense_types,
-                           total_expenses_last_month=total_expenses_last_month
+                           total_expenses_last_month=total_expenses_last_month,
+                           expenses_data=expenses_data
                            )
 
 
