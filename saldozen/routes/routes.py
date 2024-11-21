@@ -1,21 +1,23 @@
 from saldozen import app
-from flask import render_template, redirect, url_for, flash, get_flashed_messages, request
-from saldozen.models import User, ExpenseType, Expense, Income
+from flask import render_template, redirect, url_for, flash, request
+from saldozen.models import User, ExpenseType, Expense, Income, ExchangeRate
 from saldozen.forms import RegisterForm, LoginForm, EditProfileForm, IncomeForm, ExpenseForm
 from saldozen import db
 from flask_login import login_user, logout_user, current_user, login_required
 from datetime import datetime
-import requests
 from decimal import Decimal
 import json
 import io
 import zipfile
 from flask import send_file
+from saldozen.services  import import_exchange_rates
+
 
 @app.route("/")
 @app.route("/home")
 @login_required 
 def home_page():
+    import_exchange_rates()
     # Carregar as despesas do usuário atual
     expenses = Expense.query.filter_by(user_id=current_user.id).order_by(Expense.date.desc()).all()
 
@@ -69,6 +71,8 @@ def home_page():
 
         flash('Entrada de despesa adicionada com sucesso!', 'success')
         return redirect(url_for('home_page'))
+    
+    exchanges = ExchangeRate.query.all()
 
     return render_template("home.html", 
                            total_expenses=total_expenses, 
@@ -80,7 +84,8 @@ def home_page():
                            formExpense=formExpense,
                            expense_types=expense_types,
                            total_expenses_last_month=total_expenses_last_month,
-                           expenses_data=expenses_data
+                           expenses_data=expenses_data,
+                           exchanges=exchanges
                            )
 
 
