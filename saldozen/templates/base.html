@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/scroll.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/income-expenses.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tiker-texto.css') }}">
     <link rel="icon" href="/static/images/teste.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
@@ -63,6 +64,18 @@
 
            
           </ul>
+
+          <div class="ticker-container">
+            <div class="ticker-text text-white">
+                {% if exchanges %}
+                    {% for exchange in exchanges %}
+                        <span>{{ exchange.currency }}: {{ exchange.value }} | </span>
+                    {% endfor %}
+                {% else %}
+                    <span>Sem dados de câmbio disponíveis.</span>
+                {% endif %}
+            </div>
+        </div>
           
             <ul class="navbar-nav">
               <li class="nav-item">
@@ -156,8 +169,6 @@
       {% endwith %}
     
       {% block content %}
-      
-
       {% endblock %}
 
     <!-- Adicione o script do Popper.js primeiro, se você usar Bootstrap sem o bundle -->
