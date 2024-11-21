@@ -174,3 +174,13 @@ class Income(db.Model):
 
     def __repr__(self):
         return f'<Income {self.amount} on {self.date}>'
+
+class ExchangeRate(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    currency = db.Column(db.String(10), nullable=False) 
+    value = db.Column(db.Float, nullable=False)  
+    date = db.Column(db.String(50), nullable=False)
+    pctChange = db.Column(db.String(5), nullable=False)
+
+    def __repr__(self):
+        return f'<ExchangeRate {self.currency} at {self.value} on {self.date}>'
