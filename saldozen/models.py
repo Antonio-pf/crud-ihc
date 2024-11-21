@@ -101,7 +101,7 @@ class Expense(db.Model):
     @staticmethod
     def get_expenses_percentage(user_id, total_income):
         if total_income == 0:
-            raise ValueError("O total de receitas não pode ser zero.")
+            return 0
         total_income_decimal = Decimal(total_income)
 
 

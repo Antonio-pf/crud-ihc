@@ -37,9 +37,9 @@ def home_page():
     formIncome = IncomeForm()
     formExpense = ExpenseForm()
     total_income = Income.get_total_income(current_user.id)
+    expenses_data = [] if total_income == 0 else Expense.get_expenses_percentage(current_user.id, total_income)
 
 
-    expenses_data = Expense.get_expenses_percentage(current_user.id, total_income)
     print(expenses_data)
 
     if formIncome.validate_on_submit():
