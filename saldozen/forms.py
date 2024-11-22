@@ -15,13 +15,11 @@ class RegisterForm(FlaskForm):
             )
 
     def validate_email_address(self, email_address_to_check):
-        print(email_address_to_check.data)
         email_adress = User.query.filter_by(
             email_address=email_address_to_check.data
         ).first()
-        print(email_adress)
         if email_adress:
-            raise ValidationError("Email já existe! Tente um diferente")
+            raise ValidationError("Este endereço de e-mail já está em uso. Por favor, escolha outro.")
 
     username = StringField(
         label="Nome:", validators=[Length(min=2, max=30), DataRequired()]
