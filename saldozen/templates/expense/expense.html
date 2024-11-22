@@ -14,27 +14,39 @@
             <div class="card bg-primary text-white">
                 <div class="card-body">
                     <h2 class="card-title h4 mb-3">Adicionar Despesa</h2>
-                    <form method="POST" class="expense-form">
-                        <div class="mb-3">
-                            <label for="expense_type_id" class="form-label">Categoria</label>
-                            <div class="select-wrapper">
-                                <select name="expense_type_id" id="expense_type_id" class="form-select" required>
-                                    <option value="">Selecione a Categoria</option>
-                                    {% for expense_type in expense_types %}
+                    <form method="POST" action="{{ url_for('add_expense') }}">
+                        <div class="modal-body">
+                            {{ formExpense.hidden_tag() }}
+                            <div class="mb-3">
+                                <label for="expense_type_id" class="form-label">Categoria</label>
+                                <div class="select-wrapper">
+                                    <select name="expense_type_id" id="expense_type_id" class="form-select bg-light-secondary"
+                                        required>
+                                        <option value="">Selecione a Categoria</option>
+                                        {% for expense_type in expense_types %}
                                         <option value="{{ expense_type.id }}">{{ expense_type.name }}</option>
-                                    {% endfor %}
-                                </select>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                {{ formExpense.amount.label(class="form-label") }}
+                                {{ formExpense.amount(class="form-control bg-light-secondary", placeholder="Valor da despesa")
+                                }}
+                            </div>
+                            <div class="mb-3">
+                                {{ formExpense.description.label(class="form-label") }}
+                                {{ formExpense.description(class="form-control bg-light-secondary", placeholder="Descrição da despesa") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ formExpense.date.label(class="form-label") }}
+                                {{ formExpense.date(class="form-control bg-light-secondary", type="date") }}
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="amount" class="form-label">Valor</label>
-                            <input type="number" name="amount" id="amount" class="form-control" placeholder="Valor" required>
+                        <div class="modal-footer border-0">
+                            <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Fechar</button>
+                            <button type="submit" class="btn btn-light">Adicionar Despesa</button>
                         </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Descrição</label>
-                            <input type="text" name="description" id="description" class="form-control" placeholder="Descrição">
-                        </div>
-                        <button type="submit" class="btn btn-light w-100">Adicionar Despesa</button>
                     </form>
                 </div>
             </div>

@@ -199,9 +199,10 @@ def expense_page():
     per_page = 10
     page = request.args.get('page', 1, type=int)  
     expenses = Expense.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=per_page, error_out=False)
+    formExpense = ExpenseForm()
 
 
-    return render_template("expense/expense.html", expense_types=expense_types, expenses=expenses)
+    return render_template("expense/expense.html", expense_types=expense_types, expenses=expenses, formExpense=formExpense)
 
 @app.route('/export-data')
 @login_required
