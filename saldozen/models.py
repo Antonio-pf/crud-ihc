@@ -4,6 +4,7 @@ from flask_login import UserMixin
 from sqlalchemy import Numeric, func, label
 from datetime import datetime, timedelta
 from decimal import Decimal
+from markupsafe import Markup
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -181,6 +182,15 @@ class ExchangeRate(db.Model):
     value = db.Column(db.Float, nullable=False)  
     date = db.Column(db.String(50), nullable=False)
     pctChange = db.Column(db.String(5), nullable=False)
+
+    @staticmethod
+    def get_icon(currency):
+        if currency == 'USD':
+            return Markup('<i class="bi bi-currency-dollar"></i>')
+        elif currency == 'EUR':
+            return Markup('<i class="bi bi-currency-euro"></i>')
+        else: return Markup('<i class="bi bi-currency-bitcoin"></i>')
+
 
     def __repr__(self):
         return f'<ExchangeRate {self.currency} at {self.value} on {self.date}>'
