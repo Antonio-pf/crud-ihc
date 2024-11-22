@@ -191,6 +191,7 @@ Home - Despesas pessoais
         </div> -->
 
 
+        {% if expenses_data | length > 0 %}
         <div class="col-12">
             <div class="card inner-card mt-4">
                 <div class="card-header">
@@ -272,6 +273,17 @@ Home - Despesas pessoais
 
             </div>
         </div>
+        {% else %}
+        <div class="col-md-12">
+            <div class="card opacity-50 text-white h-100">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                    <h3 class="card-title text-dark">Sem despesas para exibir</h3>
+                   
+                </div>
+                
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 </div>
@@ -295,8 +307,7 @@ Home - Despesas pessoais
                     </div>
                     <div class="mb-3">
                         {{ formIncome.description.label(class="form-label") }}
-                        {{ formIncome.description(class="form-control bg-light-primary", placeholder="Descrição da
-                        entrada") }}
+                        {{ formIncome.description(class="form-control bg-light-primary", placeholder="Descrição da entrada") }}
                     </div>
                     <div class="mb-3">
                         {{ formIncome.date.label(class="form-label") }}
@@ -343,8 +354,7 @@ Home - Despesas pessoais
                     </div>
                     <div class="mb-3">
                         {{ formExpense.description.label(class="form-label") }}
-                        {{ formExpense.description(class="form-control bg-light-secondary", placeholder="Descrição da
-                        despesa") }}
+                        {{ formExpense.description(class="form-control bg-light-secondary", placeholder="Descrição da despesa") }}
                     </div>
                     <div class="mb-3">
                         {{ formExpense.date.label(class="form-label") }}
