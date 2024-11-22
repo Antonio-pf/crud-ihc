@@ -1,7 +1,8 @@
 from saldozen import db, login_manager
 from saldozen import bcrypt
 from flask_login import UserMixin
-from sqlalchemy import Numeric, func, label
+from sqlalchemy.sql import expression as sql_expr
+from sqlalchemy import Numeric, func
 from datetime import datetime, timedelta
 from decimal import Decimal
 from markupsafe import Markup
@@ -110,7 +111,7 @@ class Expense(db.Model):
             db.session.query(
                 Expense.expense_type_id,
                 ExpenseType.name,  # Incluindo o nome do tipo de despesa
-                label('total', func.sum(Expense.amount))
+                sql_expr.label('total', func.sum(Expense.amount))
             )
             .join(ExpenseType, Expense.expense_type_id == ExpenseType.id)  # Realizando o join
             .filter(Expense.user_id == user_id)
@@ -124,7 +125,7 @@ class Expense(db.Model):
 
         other_expenses = (
             db.session.query(
-                label('total', func.sum(Expense.amount))
+                sql_expr.label('total', func.sum(Expense.amount))
             )
             .filter(
                 Expense.user_id == user_id,
