@@ -69,7 +69,9 @@
             <div class="ticker-text text-white">
                 {% if exchanges %}
                     {% for exchange in exchanges %}
-                        <span>{{ exchange.currency }}: {{ exchange.value }} | </span>
+                    
+                        <span class="fw-bolder opacity-50">{{ exchange.get_icon(exchange.currency)}}{{ exchange.currency }}:</span>
+                        <span class="fw-bolder">{{ exchange.value | round(2)}} |</span>
                     {% endfor %}
                 {% else %}
                     <span>Sem dados de câmbio disponíveis.</span>

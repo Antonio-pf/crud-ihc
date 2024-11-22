@@ -73,6 +73,7 @@ def home_page():
         return redirect(url_for('home_page'))
     
     exchanges = ExchangeRate.query.all()
+    print(exchanges)
 
     return render_template("home.html", 
                            total_expenses=total_expenses, 
