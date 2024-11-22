@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField, DecimalField, DateF
 from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError, NumberRange
 from saldozen.models import User
 from flask_login import current_user
+from email_validator import validate_email, EmailNotValidError  # Importando o email-validator
 
 
 class RegisterForm(FlaskForm):
@@ -10,16 +11,18 @@ class RegisterForm(FlaskForm):
     def validate_username(self, username_to_check):
         user = User.query.filter_by(username=username_to_check.data).first()
         if user:
-            raise ValidationError(
-                "Username já existe! Por favor tente um diferente"
-            )
+            raise ValidationError("Username já existe! Por favor tente um diferente")
 
     def validate_email_address(self, email_address_to_check):
-        email_adress = User.query.filter_by(
-            email_address=email_address_to_check.data
-        ).first()
+        try:
+            # Valida o formato do email e verifica se o domínio é válido
+            validate_email(email_address_to_check.data)
+        except EmailNotValidError:
+            raise ValidationError("Email inválido. Por favor, insira um e-mail válido.")
+        
+        email_adress = User.query.filter_by(email_address=email_address_to_check.data).first()
         if email_adress:
-            raise ValidationError("Este endereço de e-mail já está em uso. Por favor, escolha outro.")
+            raise ValidationError("Email já existe! Tente um diferente")
 
     username = StringField(
         label="Nome:", validators=[Length(min=2, max=30), DataRequired()]
@@ -41,6 +44,7 @@ class LoginForm(FlaskForm):
     password = PasswordField(label="Senha: ", validators=[DataRequired()])
     submit = SubmitField(label="Entrar")
 
+
 class EditProfileForm(FlaskForm):
     def validate_username(self, username_to_check):
         user = User.query.filter_by(username=username_to_check.data).first()
@@ -60,12 +64,12 @@ class EditProfileForm(FlaskForm):
     )
     submit = SubmitField(label="Salvar Alterações")
 
+
 class IncomeForm(FlaskForm):
     amount = DecimalField('Valor', places=2, validators=[DataRequired(), NumberRange(min=0, message="O valor deve ser positivo.")])
     description = StringField('Descrição', validators=[DataRequired()])
     date = DateField('Data', format='%Y-%m-%d', validators=[DataRequired()])
     submit = SubmitField('Adicionar Entrada')
-
 
 
 class ExpenseForm(FlaskForm):
