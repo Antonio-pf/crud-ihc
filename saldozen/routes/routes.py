@@ -1,7 +1,7 @@
 from saldozen import app
 from flask import render_template, redirect, url_for, flash, request
 from saldozen.models import User, ExpenseType, Expense, Income, ExchangeRate
-from saldozen.forms import RegisterForm, LoginForm, EditProfileForm, IncomeForm, ExpenseForm
+from saldozen.forms import RegisterForm, LoginForm, EditProfileForm, IncomeForm, ExpenseForm, ExpenseTypeForm
 from saldozen import db
 from flask_login import login_user, logout_user, current_user, login_required
 from datetime import datetime
@@ -200,9 +200,9 @@ def expense_page():
     page = request.args.get('page', 1, type=int)  
     expenses = Expense.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=per_page, error_out=False)
     formExpense = ExpenseForm()
+    formExpenseType = ExpenseTypeForm()
 
-
-    return render_template("expense/expense.html", expense_types=expense_types, expenses=expenses, formExpense=formExpense)
+    return render_template("expense/expense.html", expense_types=expense_types, expenses=expenses, formExpense=formExpense, formExpenseType=formExpenseType)
 
 @app.route('/export-data')
 @login_required
@@ -291,6 +291,23 @@ def add_expense():
         print(formExpense.errors) 
 
     return render_template("home_page.html", formExpense=formExpense)   
+
+@app.route('/create-expense', methods=['POST'])
+@login_required
+def create_expense():
+    formExpenseType = ExpenseTypeForm()
+
+    if formExpenseType.validate_on_submit():
+
+        new_expense_type = ExpenseType(
+            name=formExpenseType.name.data, 
+        )
+        
+        db.session.add(new_expense_type)
+        db.session.commit()  
+
+        flash('Novo tipo despesa adicionada com sucesso!', 'success') 
+        return redirect(url_for('expense_page'))
 
 
 @app.route('/delete-expense/<int:id_expense>', methods=['GET'])

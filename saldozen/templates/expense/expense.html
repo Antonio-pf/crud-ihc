@@ -6,7 +6,22 @@
 
 {% block content %}
 <div class="container-fluid py-4 custom-container w-75">
-    <h1 class="text-center text-white mb-4">Gerenciar Despesas</h1>
+    <section class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+        <!-- Texto -->
+        <div class="text-center text-md-start mb-3 mb-md-0">
+            <h1 class="text-white">Gerenciar Depesas</h1>
+            <p>Aqui você tem mais detalhes sobre cada despesas paga</p>
+        </div>
+
+        <!-- Botões -->
+        <div class="d-flex justify-content-center align-items-center gap-3">
+            <a href="#" class="btn btn-light d-flex gap-2 align-items-center text-nowrap" data-bs-toggle="modal"
+                data-bs-target="#detailExpenses">
+                <i class="bi bi-plus-circle-dotted"></i>
+                <span>Personalizar nova despesa</span>
+            </a>
+        </div>
+    </section>
     
     <div class="row g-4">
         <!-- Adicionar Despesa Card -->
@@ -44,7 +59,7 @@
                             </div>
                         </div>
                         <div class="modal-footer border-0">
-                            <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Fechar</button>
+                            <button type="button" class="btn btn-outline-light mx-3" data-bs-dismiss="modal">Fechar</button>
                             <button type="submit" class="btn btn-light">Adicionar Despesa</button>
                         </div>
                     </form>
@@ -110,6 +125,31 @@
             </div>
         </div>
         
+    </div>
+</div>
+
+<div class="modal fade" id="detailExpenses" tabindex="-1" role="dialog" aria-labelledby="detailExpensesModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bg-primary text-white">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="detailExpensesModalLabel">Nova categoria despesa</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{{ url_for('create_expense') }}">
+                <div class="modal-body">
+                    {{ formExpenseType.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ formExpenseType.name.label(class="form-label") }}
+                        {{ formExpenseType.name(class="form-control bg-light-primary", placeholder="Descrição da despesa") }}
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="submit" class="btn btn-light">Criar</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

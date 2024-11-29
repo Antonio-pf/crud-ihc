@@ -56,13 +56,10 @@
               <li class="nav-item">
                 <a class="nav-link {% if request.path == url_for('income_page') %}active{% endif %}" href="{{ url_for('income_page') }}">Entradas</a>
             </li>
-
             
               <li class="nav-item">
                   <a class="nav-link {% if request.path == url_for('expense_page') %}active{% endif %}" href="{{ url_for('expense_page') }}">Despesas</a>
               </li>
-
-           
           </ul>
 
           <div class="ticker-container">
@@ -150,10 +147,7 @@
             </ul>
           </div>  
         {% endif %}
-
-        
         </div>
-        
       </nav>
 
     {% with messages = get_flashed_messages(with_categories=true) %}

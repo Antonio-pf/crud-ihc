@@ -78,3 +78,7 @@ class ExpenseForm(FlaskForm):
     date = DateField('Data', format='%Y-%m-%d', validators=[DataRequired()])
     expense_type_id = SelectField('Tipo de Despesa', coerce=int, validators=[DataRequired()])
     submit = SubmitField('Adicionar Entrada')
+
+class ExpenseTypeForm(FlaskForm):
+    name = StringField('Descrição', validators=[DataRequired()])
+
