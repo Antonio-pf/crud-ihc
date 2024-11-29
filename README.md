@@ -42,9 +42,17 @@ cd saldozen
 
 É uma boa prática criar um ambiente virtual para evitar conflitos de dependências. Para isso, execute:
 
-```bash
-python -m venv venv
-```
+- Se você estiver usando uma distribuição Debian/Ubuntu e receber um erro ao criar o ambiente virtual, é necessário instalar o pacote `python3-venv`. Para isso, execute:
+
+    ```bash
+    sudo apt install python3.10-venv
+    ```
+
+  Depois de instalar o pacote, você pode criar o ambiente virtual com o comando:
+
+  ```bash
+  python3 -m venv venv
+
 
 ### 3. Instale as dependências
 
