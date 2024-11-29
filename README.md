@@ -63,9 +63,12 @@ python3 run.py
 ```
 
 ## 📦 Tecnologias Utilizadas
+**Python:** Linguagem de programação principal.
 
-  Python: Linguagem de programação principal.
-  Flask: Framework web usado para o desenvolvimento da aplicação.
-  SQLAlchemy: ORM para interagir com o banco de dados.
-  Jinja2: Motor de templates para renderização de páginas HTML.
-  Bootstrap: Estilização da aplicação.
+**Flask:** Framework web usado para o desenvolvimento da aplicação.
+
+**SQLAlchemy:** ORM para interagir com o banco de dados.
+
+**Jinja2:** Motor de templates para renderização de páginas HTML.
+
+**Bootstrap:** Estilização da aplicação.
