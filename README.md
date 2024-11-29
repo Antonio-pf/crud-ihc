@@ -35,7 +35,7 @@ Siga os passos abaixo para rodar o **SaldoZen** localmente no seu computador.
 Primeiro, clone este repositório para o seu ambiente local:
 
 ```bash
-git clone https://github.com/seu-usuario/saldozen.git
+git clone https://github.com/Antonio-pf/crud-ihc.git
 cd saldozen
 ```
 ### 2. Crie um ambiente virtual (opcional, mas recomendado)
